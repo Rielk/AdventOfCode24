@@ -1,2 +1,8 @@
-*.js.map
-*.js
+node_modules/
+
+**.js.map
+**.js
+
+inputs/**
+!inputs/getInput.ts
+!inputs/Example*

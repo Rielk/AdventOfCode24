@@ -5,6 +5,7 @@
         },
         "**/*.js.map": {
             "when": "$(basename)"
-        }
+        },
+        "node_modules": true
     }
 }
