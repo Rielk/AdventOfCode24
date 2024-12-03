@@ -1,32 +1,37 @@
+import { error } from "console";
 import { getInput } from "../inputs/getInput";
 
 var example = false;
 
-var data = getInput(3, example);
+const mulrx = /mul\(\d{1,3},\d{1,3}\)/, dorx = /do\(\)/, dontrx = /don't\(\)/
 
-var matches = data.match(/mul\(\d{1,3},\d{1,3}\)/g);
-const matchToVal = (match: string) => {
-    var split = match.split(',');
-    var x = parseInt(split[0].replace('mul(', ''));
-    var y = parseInt(split[1].replace(')', ''));
-    return x * y;
+var commands = getInput(3, example).match(new RegExp(mulrx.source + '|' + dorx.source + '|' + dontrx.source, 'g'));
+
+function doMul(match: string) {
+    var split = match.match(/\d+/g);
+    if (split == undefined || split.length != 2)
+        throw error('Invalid Match');
+    return parseInt(split[0]) * parseInt(split[1]);
 }
 
-var values = matches?.map(matchToVal);
-var sum = values?.reduce((x, y) => x + y);
-
-console.log(`Sum of Multiplications: ${sum}`);
-
-var matches = data.match(/mul\(\d{1,3},\d{1,3}\)|do\(\)|don't\(\)/g);
-var doing = true;
-var sumBetter  = matches?.reduce((sum, match) => {
-    if (match == 'do()')
-        doing = true;
-    else if (match == 'don\'t()')
-        doing = false;
-    else if (doing)
-        return sum + matchToVal(match);
+var allValueSum = commands?.reduce((sum, command) => {
+    if (mulrx.test(command))
+        sum += doMul(command);
     return sum;
 }, 0);
 
-console.log(`Better sum of Multiplications: ${sumBetter}`);
+var cleverSum = commands?.reduce(({ sum, doing }, command) => {
+    if (dorx.test(command))
+        doing = true;
+    else if (dontrx.test(command))
+        doing = false;
+    else if (doing)
+        sum += doMul(command);
+    return {
+        sum: sum,
+        doing: doing
+    };
+}, { sum: 0, doing: true }).sum;
+
+console.log(`Sum of All Multiplications: ${allValueSum}`);
+console.log(`Better sum of Multiplications: ${cleverSum}`);
