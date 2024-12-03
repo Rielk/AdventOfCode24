@@ -1,4 +1,4 @@
-import { addToSortedArray } from "../general/sortedArray";
+import { addToSortedArray } from "../general/arrayUtils";
 import { processInput } from "../inputs/getInput";
 
 var example = false;
