@@ -16,7 +16,12 @@ export function getInputLineByLine(day: number, example: boolean = false): Array
     return data.split(/\r?\n/);
 }
 
-export function processInput(callbackfn: (value: string, index: number, array: string[]) => void,day: number, example: boolean = false) {
+export function processInput(callbackfn: (value: string, index: number, array: string[]) => void, day: number, example: boolean = false): void {
     var data = getInputLineByLine(day, example);
     data.forEach(callbackfn);
+}
+
+export function mapInput<T>(callbackfn: (value: string, index: number, array: string[]) => T, day: number, example: boolean = false): Array<T> {
+    var data = getInputLineByLine(day, example);
+    return data.map(callbackfn);
 }
