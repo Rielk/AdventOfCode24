@@ -23,7 +23,7 @@ function sortedIndex<T>(array: Array<T>, item: T, ascend: boolean) : number {
     return low
 }
 
-export function copyArrayWithElementRemoved<T>(array: Array<T>, start: number, deleteCount: number = 1) {
+export function arrayAfterSplice<T>(array: Array<T>, start: number, deleteCount: number = 1) {
     const newArray = Array.from(array);
     newArray.splice(start, deleteCount);
     return newArray;
