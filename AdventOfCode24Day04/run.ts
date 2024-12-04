@@ -40,9 +40,8 @@ function doCountWordAround(data: string[], x: number, y: number, word: string): 
 }
 
 function doCountCrossWordAround(data: string[], x: number, y: number, word: string): number {
-    if (word.length != 3)
-        throw error;
-    if (data[y][x] != word[1])
+    const halfLength = Math.floor(word.length / 2);
+    if (data[y][x] != word[halfLength])
         return 0;
     var count = 0;
     for (const basexOff of [-1, 0, 1])
@@ -55,13 +54,16 @@ function doCountCrossWordAround(data: string[], x: number, y: number, word: stri
     return count;
 
     function checkWord(basexOff: number, baseyOff: number): boolean {
-        for (const charMult of [1, -1])
-            for (const sideOffset of [1, -1]){
-                const target = word[charMult == 1 ? 0 : 2];
-                const xOff = (basexOff*charMult)+(sideOffset*baseyOff), yOff = (baseyOff*charMult)+(sideOffset*basexOff);
+        for (let charDir = -halfLength; charDir <= halfLength; charDir++) {
+            if (charDir == 0) continue;
+            for (let perpDir = -halfLength; perpDir <= halfLength; perpDir++) {
+                if (perpDir == 0) continue;
+                const target = word[charDir + halfLength];
+                const xOff = (basexOff * charDir) + (perpDir * baseyOff), yOff = (baseyOff * charDir) + (perpDir * basexOff);
                 if (data[y + yOff]?.[x + xOff] != target)
                     return false;
             }
+        }
         return true;
     }
 }
