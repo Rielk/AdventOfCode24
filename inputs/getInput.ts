@@ -3,7 +3,11 @@ import { readFileSync } from 'node:fs';
 export function getInput(day: number, example: boolean = false): string {
     if (!example) {
         try {
-            return readFileSync(`./inputs/${day}.txt`, 'utf8');
+            var ret = readFileSync(`./inputs/${day}.txt`, 'utf8');
+            if (ret)
+                return ret;
+            else
+            console.error(`Input is empty for Day ${day}. Please add it to the text file called "${day}.txt" in the inpts folder.\nUsing the Example data instead.`);    
         } catch (err) {
             console.error(`Input not provided for Day ${day}. Please add it as a text file called "${day}.txt" to the inpts folder.\nUsing the Example data instead.`);
         }
