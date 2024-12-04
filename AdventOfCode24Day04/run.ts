@@ -12,16 +12,21 @@ for (let y = 0; y < height; y++)
     }
 
 function countWordAround(data: string[], x: number, y: number, word: string): number {
+    if (data[y][x] != word[0])
+        return 0;
+
     var count = 0;
     for (const basexOff of [-1, 0, 1])
         for (const baseyOff of [-1, 0, 1]) {
-            if (checkWord(data, x, y, basexOff, baseyOff))
+            if (basexOff == 0 && baseyOff == 0)
+                continue;
+            if (checkWord(basexOff, baseyOff))
                 count++;
         }
     return count;
 
-    function checkWord(data: string[], x: number, y: number, basexOff: number, baseyOff: number): boolean {
-        for (let mult = 0; mult < word.length; mult++) {
+    function checkWord(basexOff: number, baseyOff: number): boolean {
+        for (let mult = 1; mult < word.length; mult++) {
             const target = word[mult];
             const xOff = basexOff * mult, yOff = baseyOff * mult;
             if (data[y + yOff]?.[x + xOff] != target)
@@ -31,4 +36,4 @@ function countWordAround(data: string[], x: number, y: number, word: string): nu
     }
 }
 
-console.log(count);
+console.log(`Total number of XMAS: ${count}`);
