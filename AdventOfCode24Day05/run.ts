@@ -1,5 +1,53 @@
-import { getInput } from "../inputs/getInput";
+import { processInput } from "../inputs/getInput";
 
 var example = false;
 
-var data = getInput(5, example);
+var rules = new Map<number, Array<number>>();
+var updates: number[][] = [];
+processInput(function (line: string) {
+    if (line == '') {
+        this.part2 = true;
+        return;
+    }
+    if (this.part2){
+        updates.push(line.split(',').map(s => parseInt(s)));
+    }
+    else {
+        var [before, after] = line.split('|').map(s => parseInt(s));
+        var existing = rules.get(after);
+        if (existing == undefined)
+            rules.set(after, existing = []);
+        if (!existing.includes(before))
+            existing.push(before);
+    }
+}, 5, example, {});
+
+var passingUpdates = updates.filter(update => correctOrder(update));
+var sumOfMiddlePassing = passingUpdates.map(update => update[Math.floor(update.length/2)]).reduce((x,y) => x+y);
+
+function correctOrder(update: number[]) : boolean {
+    for (let i = 0; i < update.length; i++) {
+        const page = update[i];
+        const required = rules.get(page);
+        if (!hasRequiredPagesBefore(required, i))
+            return false;
+    }
+    return true;
+
+    function hasRequiredPagesBefore(required: number[] | undefined, i: number) : boolean {
+        if (required == undefined || required.length <= 0)
+            return true;
+
+        for (let ri = 0; ri < required.length; ri++) {
+            const reqPage = required[ri];
+            for (let ci = i; ci < update.length; ci++) {
+                const checkPage = update[ci];
+                if (reqPage == checkPage)
+                    return false;
+            }
+        }
+        return true;
+    }
+}
+
+console.log(sumOfMiddlePassing)

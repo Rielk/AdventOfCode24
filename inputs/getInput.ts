@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 
-export function getInput(day: number, example: boolean = false): string {
+export function getInput(day: number, example: boolean): string {
     if (!example) {
         try {
             var ret = readFileSync(`./inputs/${day}.txt`, 'utf8');
@@ -15,17 +15,17 @@ export function getInput(day: number, example: boolean = false): string {
     return readFileSync(`./inputs/Example${day}.txt`, 'utf8');
 }
 
-export function getInputLineByLine(day: number, example: boolean = false): Array<string> {
+export function getInputLineByLine(day: number, example: boolean): Array<string> {
     var data = getInput(day, example);
     return data.split(/\r?\n/);
 }
 
-export function processInput(callbackfn: (value: string, index: number, array: string[]) => void, day: number, example: boolean = false): void {
+export function processInput(callbackfn: (value: string, index: number, array: string[]) => void, day: number, example: boolean, thisArg?: any): void {
     var data = getInputLineByLine(day, example);
-    data.forEach(callbackfn);
+    data.forEach(callbackfn, thisArg);
 }
 
-export function mapInput<T>(callbackfn: (value: string, index: number, array: string[]) => T, day: number, example: boolean = false): Array<T> {
+export function mapInput<T>(callbackfn: (value: string, index: number, array: string[]) => T, day: number, example: boolean, thisArg?: any): Array<T> {
     var data = getInputLineByLine(day, example);
-    return data.map(callbackfn);
+    return data.map(callbackfn, thisArg);
 }
