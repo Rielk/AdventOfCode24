@@ -7,9 +7,9 @@ export function getInput(day: number, example: boolean = false): string {
             if (ret)
                 return ret;
             else
-            console.error(`Input is empty for Day ${day}. Please add it to the text file called "${day}.txt" in the inpts folder.\nUsing the Example data instead.`);    
+            console.error(`Input is empty for Day ${day}. Please add it to the text file called "${day}.txt" in the inputs folder.\nUsing the Example data instead.`);    
         } catch (err) {
-            console.error(`Input not provided for Day ${day}. Please add it as a text file called "${day}.txt" to the inpts folder.\nUsing the Example data instead.`);
+            console.error(`Input not provided for Day ${day}. Please add it as a text file called "${day}.txt" to the inputs folder.\nUsing the Example data instead.`);
         }
     }
     return readFileSync(`./inputs/Example${day}.txt`, 'utf8');
