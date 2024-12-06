@@ -4,6 +4,9 @@ export class Guard {
     private x: number;
     private y: number;
     private dir_index = 0;
+    private visited : number [][][] = []
+    private mapHeight: number = 0;
+    private mapWidth: number = 0;
     public get dir(): [number, number] {
         return Guard.directions[this.dir_index];
     }
@@ -13,27 +16,35 @@ export class Guard {
         this.start_y = this.y = y;
     }
 
-    public walk(map: boolean[][]): {visited: boolean[][], loop: boolean} {
-        this.reset();
-        var visited : number[][][] = map.map(row => row.map(() => []));
-        markVisited(this.start_x, this.start_y, this.dir_index);
-        var moved, newLocation, loop = false;
+    public walk(map: boolean[][]): boolean[][] {
+        this.doWalk(map);
+        return this.visited.map(row => row.map(col => col.length > 0));
+    }
+
+    public checkForLoop(map: boolean[][]) : boolean {
+        return this.doWalk(map);
+    }
+
+    private doWalk(map: boolean[][]): boolean {
+        this.reset(map);
+        this.markVisited(this.start_x, this.start_y, this.dir_index);
+        var moved, newLocation;
         while (({ moved, newLocation } = this.step(map)).cont) {
             if (moved){
-                if (loop = isVisitied(newLocation.x, newLocation.y, this.dir_index))
-                    break;
-                markVisited(newLocation.x, newLocation.y, this.dir_index)
+                if (this.isVisitied(newLocation.x, newLocation.y, this.dir_index))
+                    return true;
+                this.markVisited(newLocation.x, newLocation.y, this.dir_index)
             }
         }
-        return {visited: visited.map(row => row.map(col => col.length > 0)), loop: loop};
+        return false;
+    }
 
-        function isVisitied (x: number, y: number, direction: number) {
-            return visited[y][x].includes(direction);
-        }
+    private isVisitied (x: number, y: number, direction: number) {
+        return this.visited[y][x].includes(direction);
+    }
 
-        function markVisited(x: number, y: number, direction: number) {
-            visited[y][x].push(direction);
-        }
+    private markVisited(x: number, y: number, direction: number) {
+        this.visited[y][x].push(direction);
     }
 
     private step(map: boolean[][]): { cont: boolean, moved: boolean, newLocation: { x: number, y: number } } {
@@ -50,10 +61,27 @@ export class Guard {
         return { cont: true, moved: move, newLocation: { x: this.x, y: this.y } };
     }
 
-    private reset() {
+    private reset(map: boolean[][]) {
         this.x = this.start_x;
         this.y = this.start_y;
         this.dir_index = 0;
+        if (this.mapHeight != map.length || this.mapWidth != map[0].length) {
+            this.mapHeight = map.length
+            this.mapWidth = map[0].length;
+            this.visited = []
+            for (let j = 0; j < this.mapHeight; j++) {
+                var row: number[][] = [];
+                this.visited.push(row);
+                for (let i = 0; i < this.mapWidth; i++) 
+                    row.push([]);
+            }
+        }
+        else {
+            this.visited.forEach(row => {
+                for (let i = 0; i < row.length; i++)
+                    row[i] = [];
+            })
+        }
     }
 
     private change_dir() {

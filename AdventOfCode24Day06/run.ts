@@ -16,8 +16,10 @@ var map = mapInput(function (line, y) {
 if (thisArgs.guard == undefined)
     throw error("No guard found");
 var guard = thisArgs.guard;
+const mapHeight = map.length
+const mapWidth = map[0].length;
 
-var { visited } = guard.walk(map);
+var visited = guard.walk(map);
 
 var visitedCount = visited.reduce((n, row) => {
     return row.reduce((m, col) => {
@@ -27,21 +29,17 @@ var visitedCount = visited.reduce((n, row) => {
     }, n);
 }, 0);
 
-var loopCount = map.reduce((n, row, j) => {
-    return row.reduce((m, _, i) => {
-        var newMap = copyMapWithObstruction(i, j);
-        if (newMap == undefined)
-            return m;
-        var { loop } = guard.walk(newMap);
-        return loop ? m+1: m;
-    }, n);
-}, 0);
+var loopCount = 0;
+var newMap = map.map(row => row.map(col => col));
+for (let j = 0; j < mapHeight; j++)
+    for (let i = 0; i < mapWidth; i++) {
+        if (map[j][i] || !visited[j][i])
+            continue;
+        newMap[j][i] = true;
+        if (guard.checkForLoop(newMap))
+            loopCount++;
+        newMap[j][i] = false;
+    }
 
-function copyMapWithObstruction(x: number, y: number): boolean[][] | undefined {
-    if (map[y][x])
-        return undefined;
-    return map.map((row, j) => row.map((col, i) => col || (i == x && j == y)));
-}
-
-console.log(visitedCount);
-console.log(loopCount);
+console.log(`Positions visited by guard; ${visitedCount}`);
+console.log(`Positions which cause a loop: ${loopCount}`);
