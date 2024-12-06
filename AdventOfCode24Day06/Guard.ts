@@ -13,19 +13,26 @@ export class Guard {
         this.start_y = this.y = y;
     }
 
-    public walk(map: boolean[][]): boolean[][] {
+    public walk(map: boolean[][]): {visited: boolean[][], loop: boolean} {
         this.reset();
-        var visited = map.map(row => row.map(() => false));
-        markVisited(this.start_x, this.start_y);
-        var moved, newLocation;
+        var visited : number[][][] = map.map(row => row.map(() => []));
+        markVisited(this.start_x, this.start_y, this.dir_index);
+        var moved, newLocation, loop = false;
         while (({ moved, newLocation } = this.step(map)).cont) {
-            if (moved)
-                markVisited(newLocation.x, newLocation.y)
+            if (moved){
+                if (loop = isVisitied(newLocation.x, newLocation.y, this.dir_index))
+                    break;
+                markVisited(newLocation.x, newLocation.y, this.dir_index)
+            }
         }
-        return visited;
+        return {visited: visited.map(row => row.map(col => col.length > 0)), loop: loop};
 
-        function markVisited(x: number, y: number) {
-            visited[y][x] = true;
+        function isVisitied (x: number, y: number, direction: number) {
+            return visited[y][x].includes(direction);
+        }
+
+        function markVisited(x: number, y: number, direction: number) {
+            visited[y][x].push(direction);
         }
     }
 

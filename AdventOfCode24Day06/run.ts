@@ -1,3 +1,4 @@
+import { error } from "console";
 import { mapInput } from "../inputs/getInput";
 import { Guard } from "./Guard";
 
@@ -12,22 +13,35 @@ var map = mapInput(function (line, y) {
     }
     return split.map(c => c == '#');
 }, 6, example, thisArgs)
+if (thisArgs.guard == undefined)
+    throw error("No guard found");
 var guard = thisArgs.guard;
 
-var visited = guard?.walk(map);
+var { visited } = guard.walk(map);
 
-function countVisited(): number | undefined {
-    if (visited == undefined)
+var visitedCount = visited.reduce((n, row) => {
+    return row.reduce((m, col) => {
+        if (col)
+            return m + 1;
+        return m;
+    }, n);
+}, 0);
+
+var loopCount = map.reduce((n, row, j) => {
+    return row.reduce((m, _, i) => {
+        var newMap = copyMapWithObstruction(i, j);
+        if (newMap == undefined)
+            return m;
+        var { loop } = guard.walk(newMap);
+        return loop ? m+1: m;
+    }, n);
+}, 0);
+
+function copyMapWithObstruction(x: number, y: number): boolean[][] | undefined {
+    if (map[y][x])
         return undefined;
-    var count = 0;
-    for (let i = 0; i < visited.length; i++) {
-        const row = visited[i];
-        for (let j = 0; j < row.length; j++) {
-            if (row[j])
-                count++;
-        }
-    }
-    return count;
+    return map.map((row, j) => row.map((col, i) => col || (i == x && j == y)));
 }
 
-console.log(countVisited());
+console.log(visitedCount);
+console.log(loopCount);
