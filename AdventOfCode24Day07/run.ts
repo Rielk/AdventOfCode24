@@ -15,24 +15,22 @@ const twoOperations = [
     (x: number, y: number) => x * y
 ];
 const threeOperations = [
-    ...twoOperations, 
-    (x: number, y : number) => {
+    ...twoOperations,
+    (x: number, y: number) => {
         var order = Math.floor(Math.log10(y)) + 1;
-        var mult = Math.pow(10, order);
-        return (x*mult)+y;
+        return (x * Math.pow(10, order)) + y;
     }
-]
+];
 
-var calibrationResultWithout = equations.reduce((val, equ) => {
-    if (equ.checkPossible(twoOperations))
-        return val + equ.result;
-    return val;
-}, 0);
-var calibrationResultWith = equations.reduce((val, equ) => {
-    if (equ.checkPossible(threeOperations))
-        return val + equ.result;
-    return val;
-}, 0);
+var calibrationResultWithout = equations.reduce(reduceFunc(twoOperations), 0);
+var calibrationResultWith = equations.reduce(reduceFunc(threeOperations), 0);
+function reduceFunc(operations: ((x: number, y: number) => number)[]): (acc: number, equ: Equation) => number {
+    return (acc: number, equ: Equation) => {
+        if (equ.checkPossible(operations))
+            return acc + equ.result;
+        return acc;
+    };
+}
 
 console.log(`Total Calibration Result without Concatenation: ${calibrationResultWithout}`);
 console.log(`Total Calibration Result with Concatenation: ${calibrationResultWith}`);
