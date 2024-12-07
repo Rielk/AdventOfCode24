@@ -1,7 +1,3 @@
-const operations = [
-    (x: number, y: number) => x + y,
-    (x: number, y: number) => x * y
-];
 export class Equation {
     private _result: number;
     public get result(): number {
@@ -14,21 +10,21 @@ export class Equation {
     constructor(result: number, inputs: number[]) {
         this._result = result;
         this._inputs = inputs;
-    } 
-    
-    checkPossible(): boolean {
-        return this.checkForValue(this.result, 0, 0);
     }
 
-    private checkForValue(target: number, current: number, from: number): boolean {
+    checkPossible(operations: ((x: number, y: number) => number)[]): boolean {
+        return this.checkForValue(this.result, operations, 0, 0);
+    }
+
+    private checkForValue(target: number, operations: ((x: number, y: number) => number)[], current: number, from: number): boolean {
         if (from >= this.inputs.length)
             return current == target;
         var value = this.inputs[from];
-        if (from == 0) 
-            return this.checkForValue(target, value, 1);
+        if (from == 0)
+            return this.checkForValue(target, operations, value, 1);
         for (var op of operations)
-            if (this.checkForValue(target, op(current, value), from + 1))
+            if (this.checkForValue(target, operations, op(current, value), from + 1))
                 return true;
         return false;
     }
- }
+}
