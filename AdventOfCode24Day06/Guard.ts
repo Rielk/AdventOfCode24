@@ -92,6 +92,3 @@ export class Guard {
         return { x: this.x + dir[0], y: this.y + dir[1] };
     }
 }
-
-if (require.main === module)
-    require("./run");
