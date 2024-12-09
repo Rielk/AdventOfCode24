@@ -2,110 +2,112 @@ import { getInput } from "../inputs/getInput";
 
 var example = false;
 
-var data: (number | undefined)[] = [];
-var filesOfSize: Map<number, number[]> = new Map();
-{
-    var input = getInput(9, example);
-    let id = 0, empty = false;
-    for (let n = 0; n < input.length; n++) {
-        const number = parseInt(input[n]);
-        if (empty)
-            for (let i = 0; i < number; i++)
-                data.push(undefined);
-        else {
-            for (let i = 0; i < number; i++)
-                data.push(id)
-            let arr = filesOfSize.get(number);
-            if (arr == undefined)
-                filesOfSize.set(number, arr = []);
-            arr.push(id);
-            id++;
+var fileSizes = getInput(9, example).split('').map(c => parseInt(c));
+
+var chopSortChecksum = calcChopSortChecksum(fileSizes);
+var blockSortChecksum = calcBlockSortChecksum(fileSizes);
+
+function calcChopSortChecksum(fileSizes : number[]): number {
+    fileSizes = [...fileSizes];
+    let ret = 0, empty = false;
+    let idStart = 0, dataIndex = 0, idEnd = Math.floor(fileSizes.length / 2);
+    for (let i = 0; i < fileSizes.length; i++, empty = !empty) {
+        let startSize = fileSizes[i];
+        if (empty) {
+            let endSize : number;
+            while ((endSize = fileSizes.pop()!) < startSize) {
+                ret += calcIncreaseInChecksum(dataIndex, endSize, idEnd--);
+                fileSizes.pop();
+                startSize -= endSize;
+                dataIndex += endSize;
+            }
+            fileSizes.push(endSize - startSize);
+            ret += calcIncreaseInChecksum(dataIndex, startSize, idEnd);
         }
-        empty = !empty;
-    }
-}
-filesOfSize = new Map([...filesOfSize.entries()].sort((a, b) => a[0] - b[0]));
-
-var chopSortChecksum = calcChopSortChecksum(data);
-var blockSortChecksum = calcBlockSortChecksum(data);
-
-function calcChopSortChecksum(data: (number | undefined)[]): number {
-    data = [...data];
-    var ret = 0;
-    for (let i = 0; i < data.length; i++) {
-        var element = data[i];
-        while (element == undefined && i < data.length)
-            element = data.pop();
-        if (element == undefined)
-            break;
-        ret += i * element;
+        else {
+            ret += calcIncreaseInChecksum(dataIndex, startSize, idStart++);
+        }
+        dataIndex += startSize;
     }
     return ret;
 }
 
-function calcBlockSortChecksum(data: (number | undefined)[]): number {
-    {
-        let ret = 0;
-        let id = 0, empty = false, dataIndex = 0;
-        for (let i = 0; i < input.length; i++) {
-            let length = parseInt(input[i]);
-            if (empty) {
-                let outs = { idOfFit: 0, lengthOfFit: 0 };
-                while (findNextFit(length, outs)) {
-                    let { idOfFit, lengthOfFit } = outs;
-                    ret += calcIncreaseInChecksum(dataIndex, lengthOfFit, idOfFit);
-                    dataIndex += lengthOfFit;
-                    length -= lengthOfFit;
-                }
-                dataIndex += length;
+function calcBlockSortChecksum(fileSizes : number[]): number {
+    let bySize = sortBySize(fileSizes);
+    let done = new Array<boolean>(Math.floor(fileSizes.length / 2));
+    let ret = 0, empty = false;
+    let id = 0, dataIndex = 0;
+    for (let i = 0; i < fileSizes.length; i++, empty = !empty) {
+        let size = fileSizes[i];
+        if (empty) {
+            let outs = { idOfFit: 0, sizeOfFit: 0 };
+            while (findNextFit(bySize, size, done, outs)) {
+                ret += calcIncreaseInChecksum(dataIndex, outs.sizeOfFit, outs.idOfFit);
+                done[outs.idOfFit] = true;
+                size -= outs.sizeOfFit;
+                dataIndex += outs.sizeOfFit;
             }
-            else {
-                let arr = filesOfSize.get(length);
-                let index = arr?.indexOf(id);
-                if (index == undefined || index < 0) { }
-                else {
-                    arr?.splice(index, 1);
-                    ret += calcIncreaseInChecksum(dataIndex, length, id);
-                }
-                dataIndex += length;
-                id++;
-            }
-            empty = !empty;
         }
-        return ret;
+        else {
+            if (!done[id]) {
+                ret += calcIncreaseInChecksum(dataIndex, size, id);
+                done[id] = true;
+            }
+            id++;
+        }
+        dataIndex += size;
     }
+    return ret;
 
-    function calcIncreaseInChecksum(start: number, length: number, id: number) {
-        let ret = 0;
-        for (let j = 0; j < length; j++)
-            ret += (start + j) * id;
-        return ret;
-    }
-
-    function findNextFit(maxLength: number, outs: { idOfFit: number, lengthOfFit: number }): boolean {
+    function findNextFit(bySize: Map<number, number[]>, maxLength: number, done : boolean[], outs: { idOfFit: number, sizeOfFit: number }): boolean {
         let options = [];
-        for (let [length, ids] of filesOfSize.entries()) {
-            if (length > maxLength)
+        for (let [size, ids] of bySize.entries()) {
+            if (size > maxLength)
                 break;
             if (ids.length <= 0)
                 continue;
-            options.push({length: length, id: ids[ids.length-1]});
+            let id;
+            while (done[id = ids[ids.length-1]])
+                ids.pop();
+            options.push({size: size, id: id});
         }
-        let maxId = -1, maxIdLength = 0;
+        outs.idOfFit = -1; outs.sizeOfFit = 0;
         for (let i = options.length - 1; i >=  0; i--) {
-            const {length, id} = options[i];
-            if (id > maxId){
-                maxId = id;
-                maxIdLength = length;
+            const {size, id} = options[i];
+            if (id > outs.idOfFit){
+                outs.idOfFit = id;
+                outs.sizeOfFit = size;
             }
         }
-        if (maxId < 0)
+        if (outs.idOfFit < 0)
             return false;
-        filesOfSize.get(maxIdLength)?.pop();
-        outs.idOfFit = maxId;
-        outs.lengthOfFit = maxIdLength;
+        bySize.get(outs.sizeOfFit)?.pop();
         return true;
     }
+
+    function sortBySize(fileSizes : number[]): Map<number, number[]> {
+        let ret = new Map<number, number[]>();
+        let id = 0, empty = false;
+        for (let i = 0; i < fileSizes.length; i++, empty = !empty) {
+            const number = fileSizes[i];
+            if (!empty) {
+                let arr = ret.get(number);
+                if (arr == undefined)
+                    ret.set(number, arr = []);
+                arr.push(id);
+                id++;
+            }
+        }
+        ret = new Map([...ret.entries()].sort((a, b) => a[0] - b[0]));
+        return ret
+    }
+}
+
+function calcIncreaseInChecksum(start: number, size: number, id: number) {
+    let ret = 0;
+    for (let j = 0; j < size; j++)
+        ret += (start + j) * id;
+    return ret;
 }
 
 console.log(`Chop Sort Checksum: ${chopSortChecksum}`)
