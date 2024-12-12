@@ -6,13 +6,11 @@ var example = false;
 
 var data: Array2D<{
     crop: string,
-    region: { plots: Vector2[], area: number, perimeter: number, sides: number } | undefined,
-    location: Vector2
-}> = mapArray2DInput((value, index) => {
+    region: { plots: Vector2[], area: number, perimeter: number, sides: number } | undefined
+}> = mapArray2DInput(value => {
     return {
         crop: value,
-        region: undefined,
-        location: index
+        region: undefined
     }
 }, '', 12, example);
 
@@ -25,32 +23,13 @@ function fillRegion(startLoc: Vector2): { plots: Vector2[], area: number, perime
     const plots: Vector2[] = [startLoc];
     let adjacentCount = 0, corners = 0;
     for (let i = 0; i < plots.length; i++) {
-        const plot = plots[i];
+        const center = plots[i];
         const insideCorners: Vector2[] = [], outsideCorners: Vector2[] = [];
-        for (let adj of plot.adjacent()) {
-            let adjLocData = data.getValue(adj);
-            if (adjLocData?.crop != thisLocData.crop) {
-                for (let corner of adj.adjacent())
-                    if (!corner.equals(plot))
-                        outsideCorners.push(corner);
-                continue;
-            }
-            adjacentCount++;
-            if (!plots.some(p => p.equals(adj)))
-                plots.push(adj);
-            for (let corner of adj.adjacent())
-                insideCorners.push(corner);
+        for (let adj of center.adjacent()) {
+            compareAdjacent(adj, center, outsideCorners, insideCorners);
         }
-        while (insideCorners.length > 0) {
-            const corner = insideCorners.pop();
-            if (insideCorners.some(c => corner?.equals(c)) && data.getValue(corner!)?.crop != thisLocData.crop)
-                corners++;
-        }
-        while (outsideCorners.length > 0) {
-            const corner = outsideCorners.pop();
-            if (outsideCorners.some(c => corner?.equals(c)))
-                corners++;
-        }
+        countInsideCorners(insideCorners);
+        countOutsideCorners(outsideCorners);
     }
     let region = {
         plots: plots,
@@ -60,6 +39,37 @@ function fillRegion(startLoc: Vector2): { plots: Vector2[], area: number, perime
     };
     plots.forEach(p => data.getValue(p)!.region = region);
     return region;
+
+    function compareAdjacent(adj: Vector2, center: Vector2, outsideCorners: Vector2[], insideCorners: Vector2[]) {
+        let adjLocData = data.getValue(adj);
+        if (adjLocData?.crop != thisLocData!.crop) {
+            for (let corner of adj.adjacent())
+                if (!corner.equals(center))
+                    outsideCorners.push(corner);
+            return;
+        }
+        adjacentCount++;
+        if (!plots.some(p => p.equals(adj)))
+            plots.push(adj);
+        for (let corner of adj.adjacent())
+            insideCorners.push(corner);
+    }
+
+    function countOutsideCorners(outsideCorners: Vector2[]) {
+        while (outsideCorners.length > 0) {
+            const corner = outsideCorners.pop();
+            if (outsideCorners.some(c => corner?.equals(c)))
+                corners++;
+        }
+    }
+
+    function countInsideCorners(insideCorners: Vector2[]) {
+        while (insideCorners.length > 0) {
+            const corner = insideCorners.pop();
+            if (insideCorners.some(c => corner?.equals(c)) && data.getValue(corner!)?.crop != thisLocData!.crop)
+                corners++;
+        }
+    }
 }
 
 let regions: { area: number, perimeter: number, sides: number }[] = [];
@@ -71,5 +81,5 @@ data.forEach2D((val, loc) => {
 let totalPrice = regions.map(r => r.area * r.perimeter).reduce((a, b) => a + b);
 let totalBulkPrice = regions.map(r => r.area * r.sides).reduce((a, b) => a + b);
 
-console.log(totalPrice);
-console.log(totalBulkPrice);
+console.log(`Total Price: ${totalPrice}`);
+console.log(`Total Discounted Price: ${totalBulkPrice}`);
