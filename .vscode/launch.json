@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day01\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day01${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -23,7 +23,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day02\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day02${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -35,7 +35,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day03\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day03${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -47,7 +47,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day04\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day04${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -59,7 +59,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day05\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day05${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -71,7 +71,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day06\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day06${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -83,7 +83,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day07\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day07${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -95,7 +95,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day08\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day08${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -107,7 +107,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day09\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day09${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -119,7 +119,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day10\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day10${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -131,7 +131,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day11\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day11${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -143,7 +143,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day12\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day12${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -155,7 +155,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day13\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day13${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -167,7 +167,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day14\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day14${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -179,7 +179,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day15\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day15${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -191,7 +191,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day16\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day16${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -203,7 +203,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day17\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day17${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -215,7 +215,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day18\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day18${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -227,7 +227,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day19\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day19${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -239,7 +239,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day20\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day20${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -251,7 +251,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day21\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day21${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -263,7 +263,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day22\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day22${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -275,7 +275,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day23\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day23${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -287,7 +287,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day24\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day24${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
@@ -299,7 +299,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\AdventOfCode24Day25\\run.ts",
+            "program": "${workspaceFolder}${/}AdventOfCode24Day25${/}run.ts",
             "outFiles": [
                 "${workspaceFolder}/**/*.js"
             ]
