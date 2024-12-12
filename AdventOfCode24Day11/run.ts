@@ -7,7 +7,7 @@ var initialStones = getInput(11, example).split(' ').map(s => parseInt(s));
 
 function calcStonesAfterNBlinks(initialStones: number[], times: number): number {
     var count: number = 0;
-    var cache : Array<Map<number, number>> = new Array(times+1);
+    var cache: Array<Map<number, number>> = new Array(times + 1);
     for (let i = 0; i < cache.length; i++)
         cache[i] = new Map();
 
@@ -19,27 +19,25 @@ function calcStonesAfterNBlinks(initialStones: number[], times: number): number 
         if (n <= 0)
             return 1;
 
-        let cachedValue  = cache[n].get(stone);
+        let cachedValue = cache[n].get(stone);
         if (cachedValue != undefined)
             return cachedValue;
 
-        if (stone == 0) {
-            let res = calcStone(1, n - 1)
-            cache[n].set(stone, res);
-            return res;
-        }
+        if (stone == 0)
+            return setCache(calcStone(1, n - 1));
         let order = Math.floor(Math.log10(stone)) + 1;
         if (order % 2 == 0) {
             let magnitude = Math.pow(10, order / 2);
             let right = stone % magnitude;
             let left = (stone - right) / magnitude;
-            let res = calcStone(left, n - 1) + calcStone(right, n - 1);
-            cache[n].set(stone, res);
-            return res;
+            return setCache(calcStone(left, n - 1) + calcStone(right, n - 1));
         }
-        let res = calcStone(stone * 2024, n - 1);
-        cache[n].set(stone, res);
-        return res;
+        return setCache(calcStone(stone * 2024, n - 1));
+
+        function setCache(x: number): number {
+            cache[n].set(stone, x);
+            return x;
+        }
     }
 }
 
