@@ -1,4 +1,4 @@
-import { Vector2 } from "../general/Coords";
+import { Vector2 } from "../general/vector2";
 import { processInput } from "../inputs/getInput";
 
 var example = false;

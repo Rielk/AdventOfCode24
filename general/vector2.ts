@@ -20,6 +20,10 @@ export class Vector2 {
         return Math.abs(this.x - other.x) + Math.abs(this.y - other.y);
     }
 
+    add(other: { x: number, y: number }): Vector2 {
+        return new Vector2(this.x + other.x, this.y + other.y);
+    }
+
     subtract(other: { x: number, y: number }): Vector2 {
         return new Vector2(this.x - other.x, this.y - other.y);
     }
@@ -32,5 +36,11 @@ export class Vector2 {
         const xDiv = this.x / other.x;
         const yDiv = this.y / other.y;
         return xDiv == Math.floor(xDiv) &&  yDiv == Math.floor(yDiv) && xDiv == yDiv;
+    }
+
+    private static directions = [new Vector2(1, 0),new  Vector2(0, 1),new  Vector2(-1, 0),new  Vector2(0, -1)];
+    public *adjacent() {
+        for (var dir of Vector2.directions)
+            yield this.add(dir);
     }
 }
