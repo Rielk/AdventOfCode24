@@ -1,22 +1,20 @@
 import { Array2D } from "../general/array2D";
 import { Vector2 } from "../general/vector2";
-import { mapInput } from "../inputs/getInput";
+import { mapArray2DInput } from "../inputs/getInput";
 
 var example = false;
-{
-    let crops = mapInput(line => line.split(''), 12, example);
-    var data: Array2D<{
-        crop: string,
-        region: { plots: Vector2[], area: number, perimeter: number, sides: number } | undefined,
-        location: Vector2
-    }> = new Array2D(crops.length, crops[0].length, (x, y) => {
-        return {
-            crop: crops[y][x],
-            region: undefined,
-            location: new Vector2(x, y)
-        };
-    });
-}
+
+var data: Array2D<{
+    crop: string,
+    region: { plots: Vector2[], area: number, perimeter: number, sides: number } | undefined,
+    location: Vector2
+}> = mapArray2DInput((value, index) => {
+    return {
+        crop: value,
+        region: undefined,
+        location: index
+    }
+}, '', 12, example);
 
 function fillRegion(startLoc: Vector2): { plots: Vector2[], area: number, perimeter: number, sides: number } {
     const thisLocData = data.getValue(startLoc);

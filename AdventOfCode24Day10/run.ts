@@ -1,16 +1,16 @@
 import { Vector2 } from "../general/vector2";
 import { Array2D } from "../general/array2D";
-import { mapInput } from "../inputs/getInput";
+import { mapArray2DInput, mapInput } from "../inputs/getInput";
 
 var example = false;
 
-{
-    let inputs = mapInput((line) => {
-        return line.split('').map(c => parseInt(c));
-    }, 10, example);
-    var data = new Array2D<{ height: number, leadsTo: Vector2[] | undefined }>
-        (inputs.length, inputs[0].length, (x, y) => { return { height: inputs[y][x], leadsTo: undefined } });
-}
+var data: Array2D<{
+    height: number,
+    leadsTo: Vector2[] | undefined
+}> = mapArray2DInput((value => {
+    return { height: parseInt(value), leadsTo: undefined }
+}), '', 10, example);
+
 function followTrail(start: Vector2): Array<Vector2> {
     var thisLocData = data.getValue(start);
     if (thisLocData == undefined)
@@ -24,14 +24,15 @@ function followTrail(start: Vector2): Array<Vector2> {
             continue;
         if (adjLocData.leadsTo == undefined)
             followTrail(adjacent);
-        thisLocData.leadsTo.splice(0,0, ...adjLocData.leadsTo!);
+        thisLocData.leadsTo.splice(0, 0, ...adjLocData.leadsTo!);
     }
     return thisLocData.leadsTo;
 }
 
-function calcScore(loc : Vector2) : {score: number, rating: number} {
+function calcScore(loc: Vector2): { score: number, rating: number } {
     var trailHeads = followTrail(loc)
-    return {score: trailHeads.filter((v,i) => trailHeads.indexOf(v) == i).length,
+    return {
+        score: trailHeads.filter((v, i) => trailHeads.indexOf(v) == i).length,
         rating: trailHeads.length
     };
 }
@@ -39,7 +40,7 @@ function calcScore(loc : Vector2) : {score: number, rating: number} {
 var score = 0, rating = 0;
 data.forEach2D((value, loc) => {
     if (value.height == 0) {
-        var {score: s, rating :r} = calcScore(loc);
+        var { score: s, rating: r } = calcScore(loc);
         score += s; rating += r;
     }
 });

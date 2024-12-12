@@ -1,4 +1,6 @@
 import { readFileSync } from 'node:fs';
+import { Array2D } from '../general/array2D';
+import { Vector2 } from '../general/vector2';
 
 export function getInput(day: number, example: boolean): string {
     if (!example) {
@@ -28,4 +30,9 @@ export function processInput(callbackfn: (value: string, index: number, array: s
 export function mapInput<T>(callbackfn: (value: string, index: number, array: string[]) => T, day: number, example: boolean, thisArg?: any): Array<T> {
     var data = getInputLineByLine(day, example);
     return data.map(callbackfn, thisArg);
+}
+
+export function mapArray2DInput<T>(callbackfn: (value: string, index: Vector2, array: string[][]) => T, splitChar: string, day: number, example: boolean, thisArg?: any) : Array2D<T> {
+    var data = mapInput(line => line.split(splitChar), day, example);
+    return new Array2D(data.length, data[0].length, (x, y) => callbackfn(data[y][x], new Vector2(x, y), data));
 }
