@@ -4,12 +4,11 @@ export function addToSortedArray<T>(array: Array<T>, item: T, ascend: boolean = 
     array.splice(sortedIndex(array, item, ascend), 0, item);
 }
 
-function sortedIndex<T>(array: Array<T>, item: T, ascend: boolean) : number {
+function sortedIndex<T>(array: Array<T>, item: T, ascend: boolean): number {
     var low = 0;
     var hig = array.length;
 
-    while (low < hig)
-    {
+    while (low < hig) {
         var mid = (low + hig) >>> 1;
         if (array[mid] < item)
             if (ascend)
