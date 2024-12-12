@@ -39,7 +39,7 @@ function calcScore(loc : Vector2) : {score: number, rating: number} {
 var score = 0, rating = 0;
 data.forEach2D((value, loc) => {
     if (value.height == 0) {
-        var {score: s, rating :r} = calcScore(new Vector2(loc.x, loc.y));
+        var {score: s, rating :r} = calcScore(loc);
         score += s; rating += r;
     }
 });

@@ -33,8 +33,8 @@ export class Array2D<T> extends Array<Array<T>> {
         return loc.x >= 0 && loc.x < this.width && loc.y >= 0 && loc.y < this.height;
     }
 
-    public forEach2D(callbackfn: (value: T, index: {x: number, y: number}, array: Array2D<T>) => void, thisArg?: any): void {
+    public forEach2D(callbackfn: (value: T, index: Vector2, array: Array2D<T>) => void, thisArg?: any): void {
         for (let j = 0; j < this.height; j++)
-            this[j].forEach((value, i) => callbackfn(value, {x: i, y: j}, this), thisArg);   
+            this[j].forEach((value, i) => callbackfn(value, new Vector2(i, j), this), thisArg);   
     }
 }
