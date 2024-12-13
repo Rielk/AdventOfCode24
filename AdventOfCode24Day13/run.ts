@@ -4,20 +4,18 @@ import { mapInputLineBatches } from "../inputs/getInput";
 var example = false;
 
 var data = mapInputLineBatches(batch => {
-    var numbers = batch.map(line => (line.match(/\d+/g) ?? []).reduce((obj, value, i) => {
-        return { ...obj, [i == 0 ? 'x' : 'y']: parseInt(value) };
-    }, { x: -1, y: -1 }));
+    var numbers = batch.map(line => line.match(/\d+/g)?.map(d => parseInt(d)) ?? []);
     return {
-        A: new Vector2(numbers[0].x, numbers[0].y),
-        B: new Vector2(numbers[1].x, numbers[1].y),
-        prize: new Vector2(numbers[2].x, numbers[2].y)
+        A: new Vector2(numbers[0][0], numbers[0][1]),
+        B: new Vector2(numbers[1][0], numbers[1][1]),
+        prize: new Vector2(numbers[2][0], numbers[2][1])
     };
 }, 4, 13, example);
 
 function tokensForPrize(input: { A: Vector2, B: Vector2, prize: Vector2 }, prizeOffset?: number): number {
     let { A, B, prize } = input;
-    if (prizeOffset) 
-        prize = new Vector2(prize.x + prizeOffset, prize.y + prizeOffset); 
+    if (prizeOffset)
+        prize = new Vector2(prize.x + prizeOffset, prize.y + prizeOffset);
     // i*A.x + j*B.x = prize.x;  i*A.y + j*B.y = prize.y;
     // i = (prize.x - j*B.x) / A.x
     // (prize.x - j*B.x)*A.y + j*B.y*A.x = prize.y*A.x;
