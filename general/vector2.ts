@@ -31,6 +31,9 @@ export class Vector2 {
     multiply(value: number): Vector2 {
         return new Vector2(this.x * value, this.y * value);
     }
+    divide(value: number) {
+        return new Vector2(this.x / value, this.y / value);
+    }
 
     isMultipleOf(other: Vector2): boolean {
         const xDiv = this.x / other.x;
