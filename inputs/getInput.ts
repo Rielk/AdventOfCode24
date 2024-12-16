@@ -22,6 +22,16 @@ export function getInputLineByLine(day: number, example: boolean): Array<string>
     return data.split(/\r?\n/);
 }
 
+
+export function get2SectionInputByLine(day: number, example: boolean): { section1: string[]; section2: string[]; } {
+    var data = getInputLineByLine(day, example);
+    var index = data.findIndex(line => !line.trim());
+    return {
+        section1: data.slice(0, index),
+        section2: data.slice(index + 1, data.length)
+    }
+}
+
 export function getInputInLineBatches(batchLength: number, day: number, example: boolean): Array<Array<string>> {
     var data = getInputLineByLine(day, example);
     var ret = [], batch = [];
@@ -55,4 +65,17 @@ export function mapInputLineBatches<T>(callbackfn: (batch: string[], index: numb
 export function mapArray2DInput<T>(callbackfn: (value: string, index: Vector2, array: string[][]) => T, splitChar: string, day: number, example: boolean, thisArg?: any): Array2D<T> {
     var data = mapInput(line => line.split(splitChar), day, example);
     return new Array2D(data.length, data[0].length, (x, y) => callbackfn(data[y][x], new Vector2(x, y), data));
+}
+
+export function map2SectionInput<TM1, TE1, TM2, TE2>(
+    callbackfn1: ((value: string, index: number, array: string[]) => TM1),
+    postProcess1: ((mid: TM1[]) => TE1),
+    callbackfn2: (value: string, index: number, array: string[]) => TM2,
+    postProcess2: ((mid: TM2[]) => TE2),
+    day: number, example: boolean, thisArg?: any): { data1: TE1; data2: TE2; } {
+    var { section1, section2 } = get2SectionInputByLine(day, example);
+    return {
+        data1: postProcess1(section1.map(callbackfn1, thisArg)),
+        data2: postProcess2(section2.map(callbackfn2, thisArg))
+    }
 }

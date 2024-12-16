@@ -25,6 +25,10 @@ export class Array2D<T> extends Array<Array<T>> {
         }
     }
 
+    public static fromArray<T>(data: Array<Array<T>>): Array2D<T> {
+        return new Array2D<T>(data.length, data[0].length, (x: number, y: number) => data[y][x]);
+    }
+
     public getValue(loc: Vector2): T | undefined {
         return this[loc.y]?.[loc.x];
     }
@@ -36,5 +40,9 @@ export class Array2D<T> extends Array<Array<T>> {
     public forEach2D(callbackfn: (value: T, index: Vector2, array: Array2D<T>) => void, thisArg?: any): void {
         for (let j = 0; j < this.height; j++)
             this[j].forEach((value, i) => callbackfn(value, new Vector2(i, j), this), thisArg);   
+    }
+
+    public map2D<TR>(callbackfn: (value: T, index: Vector2, array: T[][]) => TR) {
+        return new Array2D<TR>(this.height, this.width, (x, y) => callbackfn(this[y][x], new Vector2(x, y), this));
     }
 }
