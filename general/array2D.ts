@@ -7,19 +7,19 @@ export class Array2D<T> extends Array<Array<T>> {
     public get height(): number {
         return this.length;
     }
-    constructor(len1: number, len2: number, defaultValue?: T);
-    constructor(len1: number, len2: number, defaultValue?: (x: number, y: number) => T);
-    constructor(len1: number, len2: number, defaultValue?: T | ((x: number, y: number) => T)) {
+    constructor(height: number, width: number, defaultValue?: T);
+    constructor(height: number, width: number, defaultValue?: (x: number, y: number) => T);
+    constructor(height: number, width: number, defaultValue?: T | ((x: number, y: number) => T)) {
         super();
         var generator: (x: number, y: number) => T;
         if (!(defaultValue instanceof Function))
             generator = (): T => defaultValue!;
         else
             generator = defaultValue;
-        for (let i = 0; i < len1; i++) {
-            var row = new Array<T>(len2);
+        for (let i = 0; i < height; i++) {
+            var row = new Array<T>(width);
             if (defaultValue)
-                for (let j = 0; j < len2; j++)
+                for (let j = 0; j < width; j++)
                     row[j] = (generator(j, i));
             this.push(row);
         }
