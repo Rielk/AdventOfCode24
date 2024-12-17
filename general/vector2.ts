@@ -46,6 +46,12 @@ export class Vector2 {
         for (var dir of Vector2.directions)
             yield this.add(dir);
     }
+    public moveDirection(dir : number, n? :number) {
+        let change = Vector2.directions[dir];
+        if (n != undefined)
+            change = change.multiply(n);
+        return this.add(change)
+    }
 
     constrainWrap(bounds: { x: number; y: number; }): Vector2 {
         let newX = this.x % bounds.x;
