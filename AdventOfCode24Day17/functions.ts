@@ -1,6 +1,6 @@
 import { Register } from "./register";
 
-export const functions: ReadonlyArray<(operand: number, register: Register) => number | undefined>
+const functions: ReadonlyArray<(operand: number, register: Register) => number | undefined>
     = [adv, bxl, bst, jnz, bxc, out, bdv, cdv];
 
 function adv(operand: number, register: Register): undefined {
@@ -22,7 +22,7 @@ function jnz(operand: number, register: Register): undefined {
     if (register.A == 0)
         step(register);
     else
-        register.ptr = operand
+        register.pointer = operand
 }
 
 function bxc(_: number, register: Register): undefined {
@@ -47,8 +47,8 @@ function cdv(operand: number, register: Register): undefined {
 
 function xdv(operand: number, register: Register): number {
     let num = register.A;
-    let den = Math.pow(2, combo(operand, register));
-    return Math.floor(num / den);
+    let den = combo(operand, register);
+    return num >> den;
 }
 
 function combo(value: number, register: Register): number {
@@ -70,5 +70,22 @@ function combo(value: number, register: Register): number {
 }
 
 function step(register: Register) {
-    register.ptr += 2;
+    register.pointer += 2;
+}
+
+export function runProgram(instructions: number[], initValues: { A: number, B: number, C: number }): number[] {
+    const outs = [];
+    let registry = {
+        A: initValues.A,
+        B: initValues.B,
+        C: initValues.C,
+        pointer: 0
+    }
+    while (registry.pointer < instructions.length) {
+        const func = functions[instructions[registry.pointer]];
+        let ret = func(instructions[registry.pointer + 1], registry);
+        if (ret != undefined)
+            outs.push(ret);
+    }
+    return outs;
 }
