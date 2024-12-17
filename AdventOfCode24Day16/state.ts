@@ -8,11 +8,19 @@ export class State implements iNode<State> {
     public readonly dir: number;
     public readonly uniqueId: number;
     private readonly maze: Array2D<boolean>;
+    private readonly _previousStates: Array<State> = [];
+    public get previousStates() : ReadonlyArray<State> {
+        return this._previousStates;
+    }
+    
     constructor(loc: Vector2, dir: number, maze: Array2D<boolean>) {
         this.loc = loc;
         this.dir = dir;
         this.uniqueId = CantorPairing(dir, CantorNegtivePairing(loc.x, loc.y));
         this.maze = maze;
+    }
+    finalise(weight: number, prevNodes: State[]): void {
+        this._previousStates.push(...prevNodes);
     }
     *getNextNodes(): Generator<{ nextNode: State; addedWeight: number; }> {
         let stepLoc = this.loc.moveDirection(this.dir);
