@@ -1,5 +1,5 @@
 import { map2SectionInput } from "../inputs/getInput";
-import { functions, runProgram } from "./functions";
+import { runProgram } from "./functions";
 
 var example = false;
 
@@ -14,6 +14,44 @@ var { data1: initValues, data2: instructions } = map2SectionInput(
     mid => mid[0].split(',').map(c => parseInt(c)),
     17, example);
 
-let outs = runProgram(instructions, initValues);
+function findAForRecreate(): number {
+    let currA = 0n, continueBits = 0n;
+    let i = instructions.length - 1;
+    while(i >= 0) {
+        let newA = findBitsForith(i, currA, continueBits);
+        continueBits = 0n;
+        if (newA != undefined) {
+            currA = newA;
+            i--;
+        }
+        else {
+            continueBits = (currA & 7n) + 1n;
+            currA = currA >> 3n;
+            i++;
+        }
+    }
+    return Number(currA);
+
+    function findBitsForith(i: number, knownBits: bigint, continueBits: bigint) : bigint | undefined {
+        knownBits = knownBits << 3n;
+        for (let newBits = continueBits; newBits <= 7n; newBits++) {
+            let trialA = knownBits + newBits;
+            let firstOutput = runProgram(instructions, { A: Number(trialA), B: initValues.B, C: initValues.C }).next().value;
+            if (firstOutput == instructions[i]) {
+                return trialA;
+            }
+        }
+        return undefined;
+    }
+}
+
+let outs = [...runProgram(instructions, initValues)];
+
+let initA = findAForRecreate();
+
+let testOuts = [...runProgram(instructions, {...initValues, A: initA})];
 
 console.log(outs.join(','));
+console.log(initA);
+console.log(initA.toString(2));
+console.log(testOuts.join(','));

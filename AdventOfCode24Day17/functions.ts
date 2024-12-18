@@ -5,50 +5,41 @@ const functions: ReadonlyArray<(operand: number, register: Register) => number |
 
 function adv(operand: number, register: Register): undefined {
     register.A = xdv(operand, register);
-    step(register);
 }
 
 function bxl(operand: number, register: Register): undefined {
-    register.B ^= operand;
-    step(register);
+    register.B = Number(BigInt(register.B) ^ BigInt(operand));
 }
 
 function bst(operand: number, register: Register): undefined {
     register.B = combo(operand, register) % 8;
-    step(register);
 }
 
 function jnz(operand: number, register: Register): undefined {
-    if (register.A == 0)
-        step(register);
-    else
+    if (register.A != 0)
         register.pointer = operand
 }
 
 function bxc(_: number, register: Register): undefined {
-    register.B ^= register.C;
-    step(register);
+    register.B = Number(BigInt(register.B) ^ BigInt(register.C));
 }
 
 function out(operand: number, register: Register): number {
-    step(register);
     return combo(operand, register) % 8;
 }
 
 function bdv(operand: number, register: Register): undefined {
     register.B = xdv(operand, register);
-    step(register);
 }
 
 function cdv(operand: number, register: Register): undefined {
     register.C = xdv(operand, register);
-    step(register);
 }
 
 function xdv(operand: number, register: Register): number {
-    let num = register.A;
-    let den = combo(operand, register);
-    return num >> den;
+    let num = BigInt(register.A);
+    let den = BigInt(combo(operand, register));
+    return Number(num >> den);
 }
 
 function combo(value: number, register: Register): number {
@@ -69,12 +60,7 @@ function combo(value: number, register: Register): number {
     }
 }
 
-function step(register: Register) {
-    register.pointer += 2;
-}
-
-export function runProgram(instructions: number[], initValues: { A: number, B: number, C: number }): number[] {
-    const outs = [];
+export function* runProgram(instructions: number[], initValues: { A: number, B: number, C: number }): Generator<number> {
     let registry = {
         A: initValues.A,
         B: initValues.B,
@@ -82,10 +68,9 @@ export function runProgram(instructions: number[], initValues: { A: number, B: n
         pointer: 0
     }
     while (registry.pointer < instructions.length) {
-        const func = functions[instructions[registry.pointer]];
-        let ret = func(instructions[registry.pointer + 1], registry);
+        const func = functions[instructions[registry.pointer++]];
+        let ret = func(instructions[registry.pointer++], registry);
         if (ret != undefined)
-            outs.push(ret);
+            yield ret;
     }
-    return outs;
 }
