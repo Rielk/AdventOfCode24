@@ -37,21 +37,16 @@ function findAForRecreate(): number {
         for (let newBits = continueBits; newBits <= 7n; newBits++) {
             let trialA = knownBits + newBits;
             let firstOutput = runProgram(instructions, { A: Number(trialA), B: initValues.B, C: initValues.C }).next().value;
-            if (firstOutput == instructions[i]) {
+            if (firstOutput == instructions[i])
                 return trialA;
-            }
         }
         return undefined;
     }
 }
 
-let outs = [...runProgram(instructions, initValues)];
+let outs = [...runProgram(instructions, initValues)].join(',');
 
 let initA = findAForRecreate();
 
-let testOuts = [...runProgram(instructions, {...initValues, A: initA})];
-
-console.log(outs.join(','));
-console.log(initA);
-console.log(initA.toString(2));
-console.log(testOuts.join(','));
+console.log(`Program Output: ${outs}`);
+console.log(`Minimum A to Recreate Program: ${initA}`);
