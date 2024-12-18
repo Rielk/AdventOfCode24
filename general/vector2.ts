@@ -1,3 +1,5 @@
+import { CantorNegtivePairing } from "./CantorPairing";
+
 export class Vector2 {
     private readonly _x: number;
     public get x(): number {
@@ -7,6 +9,7 @@ export class Vector2 {
     public get y(): number {
         return this._y;
     }
+
     constructor(x: number, y: number) {
         this._x = x;
         this._y = y;
@@ -46,7 +49,7 @@ export class Vector2 {
         for (var dir of Vector2.directions)
             yield this.add(dir);
     }
-    public moveDirection(dir : number, n? :number) {
+    public moveDirection(dir: number, n?: number) {
         let change = Vector2.directions[dir];
         if (n != undefined)
             change = change.multiply(n);
@@ -61,5 +64,9 @@ export class Vector2 {
         if (newY < 0)
             newY += bounds.y;
         return new Vector2(newX, newY);
+    }
+
+    cantorPair(): number {
+        return CantorNegtivePairing(this.x, this.y);
     }
 }

@@ -18,7 +18,7 @@ export class Array2D<T> extends Array<Array<T>> {
             generator = defaultValue;
         for (let i = 0; i < height; i++) {
             var row = new Array<T>(width);
-            if (defaultValue)
+            if (defaultValue != undefined)
                 for (let j = 0; j < width; j++)
                     row[j] = (generator(j, i));
             this.push(row);
@@ -31,6 +31,13 @@ export class Array2D<T> extends Array<Array<T>> {
 
     public getValue(loc: Vector2): T | undefined {
         return this[loc.y]?.[loc.x];
+    }
+
+    public setValue(loc: Vector2, value: T) : boolean {
+        if (!this.inBounds(loc))
+            return false;
+        this[loc.y][loc.x] = value;
+        return true;
     }
 
     public inBounds(loc: Vector2) : boolean {
