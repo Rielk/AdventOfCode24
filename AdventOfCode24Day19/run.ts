@@ -3,7 +3,7 @@ import { Pattern } from "./pattern";
 
 var example = false;
 
-var { data1: towelArray, data2: patterns } = map2SectionInput(
+var { data1: towels, data2: patterns } = map2SectionInput(
     line => {
         return line.split(', ');
     }, inputs => {
@@ -11,23 +11,6 @@ var { data1: towelArray, data2: patterns } = map2SectionInput(
     }, line => {
         return line;
     }, x => x, 19, example);
-let towels = new Map<string, string[]>();
-towelArray.forEach(t => {
-    let start = t[0];
-    let arr = towels.get(start);
-    if (arr == undefined)
-        towels.set(start, arr = []);
-    arr.push(t);
-})
-
-function countMakeable(patterns: string[]): number {
-    let count = 0;
-    patterns.forEach(pattern => {
-        if (findWaysToMake(pattern) > 0)
-            count++;
-    });
-    return count;
-}
 
 let cache = new Map<string, number>();
 function findWaysToMake(pattern: string): number {
@@ -35,20 +18,23 @@ function findWaysToMake(pattern: string): number {
     if (cached != undefined)
         return cached;
     let waysToMake = 0;
-    for (let newTowel of towels.get(pattern[0]) ?? []) {
+    for (let newTowel of towels) {
         if (!Pattern.beginsWith(pattern, newTowel))
             continue;
         let remainingPattern = pattern.slice(newTowel.length);
-        if (remainingPattern.length <= 0) {
+        if (remainingPattern.length <= 0)
             waysToMake += 1;
-        }
-        else {
+        else
             waysToMake += findWaysToMake(remainingPattern)
-        }
     }
     cache.set(pattern, waysToMake);
     return waysToMake;
 }
 
-console.log(countMakeable(patterns));
-console.log(patterns.map(p => findWaysToMake(p)).reduce((x, y) => x + y));
+let countWaysToMake = patterns.map(p => findWaysToMake(p));
+
+let possiblePatterns = countWaysToMake.reduce((total, x) => total + (x > 0 ? 1 : 0), 0);
+let totalCombinations = countWaysToMake.reduce((x, y) => x + y);
+
+console.log(`Possible Designs: ${possiblePatterns}`);
+console.log(`Sum of Different Ways to Make Each: ${totalCombinations}`);
