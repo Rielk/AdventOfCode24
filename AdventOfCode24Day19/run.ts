@@ -20,31 +20,35 @@ towelArray.forEach(t => {
     arr.push(t);
 })
 
-function countMakeable(patterns: string[], towels: Map<string, string[]>): number {
+function countMakeable(patterns: string[]): number {
     let count = 0;
-    let cache = new Map<string, boolean>();
     patterns.forEach(pattern => {
-        if (canMake(pattern, towels, cache))
+        if (findWaysToMake(pattern) > 0)
             count++;
     });
     return count;
 }
 
-function canMake(pattern: string, towels: Map<string, string[]>, cache: Map<string, boolean>): boolean {
+let cache = new Map<string, number>();
+function findWaysToMake(pattern: string): number {
     let cached = cache.get(pattern);
     if (cached != undefined)
         return cached;
+    let waysToMake = 0;
     for (let newTowel of towels.get(pattern[0]) ?? []) {
         if (!Pattern.beginsWith(pattern, newTowel))
             continue;
         let remainingPattern = pattern.slice(newTowel.length);
-        if (remainingPattern.length <= 0 || canMake(remainingPattern, towels, cache)){
-            cache.set(pattern, true);
-            return true;
+        if (remainingPattern.length <= 0) {
+            waysToMake += 1;
+        }
+        else {
+            waysToMake += findWaysToMake(remainingPattern)
         }
     }
-    cache.set(pattern, false);
-    return false;
+    cache.set(pattern, waysToMake);
+    return waysToMake;
 }
 
-console.log(countMakeable(patterns, towels));
+console.log(countMakeable(patterns));
+console.log(patterns.map(p => findWaysToMake(p)).reduce((x, y) => x + y));

@@ -1,5 +1,3 @@
-import { Towel } from "./towel";
-
 export class Pattern {
     static beginsWith(pattern: string, towel: string): boolean {
         if (towel.length > pattern.length)
