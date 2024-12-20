@@ -1,4 +1,3 @@
-import { stat } from "fs";
 import { Array2D } from "../general/array2D";
 import { Vector2 } from "../general/vector2";
 import { mapArray2DInput } from "../inputs/getInput";
@@ -33,25 +32,33 @@ states.setValue(start, startState);
         }
 }
 
-let cheats = states.map2D(state => {
-    if (state == undefined)
-        return undefined;
-    let timeSaves: Array<{ timeSave: number, end: Vector2 }> = [];
-    for (let dir of [0, 1, 2, 3]) { //This is technically not a complete list, but works for input
-        let checkLoc = state.location.moveDirection(dir, 2);
+function countCheats(state: State, maxLength: number, minSave: number): number {
+    let cheats = 0;
+    for (let checkLoc of state.location.withinDistance(maxLength)) {
         let checkState = states.getValue(checkLoc);
         if (checkState == undefined)
             continue;
-        let timeSave = checkState.distance - state.distance - 2;
-        if (timeSave > 0)
-            timeSaves.push({ timeSave: timeSave, end: checkLoc });
+        let timeSave = checkState.distance - state.distance - state.location.distanceTo(checkLoc);
+        if (timeSave >= minSave)
+            cheats++;
     }
-    return timeSaves
-});
-let goodCheats = cheats.flat(2).reduce((t, cheat) => {
-    if ((cheat?.timeSave ?? 0) >= 100)
-        t++;
-    return t;
-} , 0);
+    return cheats;
+}
 
-console.log(goodCheats);
+let cheatCountsByLoc = states.map2D(state => {
+    if (state == undefined)
+        return {short: 0, long: 0};
+    return {
+        short: countCheats(state, 2, 100),
+        long: countCheats(state, 20, 100)
+    };
+});
+let cheatCounts = cheatCountsByLoc.flat(2).reduce((t, count) => {
+    return {
+        short: t.short + (count.short ?? 0),
+        long: t.long + (count.long ?? 0)
+    };
+}, { short: 0, long: 0 });
+
+console.log(`Total cheats with max length 2: ${cheatCounts.short}`);
+console.log(`Total cheats with max length 20: ${cheatCounts.long}`);

@@ -45,7 +45,7 @@ export class Vector2 {
     }
 
     private static directions = [new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, 0), new Vector2(0, -1)];
-    public *adjacent() {
+    public *adjacent(): Generator<Vector2> {
         for (var dir of Vector2.directions)
             yield this.add(dir);
     }
@@ -54,6 +54,17 @@ export class Vector2 {
         if (n != undefined)
             change = change.multiply(n);
         return this.add(change)
+    }
+    public *withinDistance(distance: number): Generator<Vector2> {
+        for (let dy = -distance; dy <= distance; dy++) {
+            let xRange = distance - Math.abs(dy);
+            let y = this.y + dy;
+            for (let dx = -xRange; dx <= xRange; dx++) {
+                let x = this.x + dx;
+                yield new Vector2(x, y);
+            }
+
+        }
     }
 
     constrainWrap(bounds: { x: number; y: number; }): Vector2 {
