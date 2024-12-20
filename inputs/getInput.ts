@@ -62,7 +62,7 @@ export function mapInputLineBatches<T>(callbackfn: (batch: string[], index: numb
     return data.map(callbackfn, thisArg);
 }
 
-export function mapArray2DInput<T>(callbackfn: (value: string, index: Vector2, array: string[][]) => T, splitChar: string, day: number, example: boolean, thisArg?: any): Array2D<T> {
+export function mapArray2DInput<T>(callbackfn: (value: string, index: Vector2, array: string[][]) => T, splitChar: string, day: number, example: boolean): Array2D<T> {
     var data = mapInput(line => line.split(splitChar), day, example);
     return new Array2D(data.length, data[0].length, (x, y) => callbackfn(data[y][x], new Vector2(x, y), data));
 }
