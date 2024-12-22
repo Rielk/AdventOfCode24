@@ -7,7 +7,7 @@ export function genSecretFrom(original: number, n: number): number {
     return Number(secret);
 }
 
-export function genPriceChangeMapFrom(original: number, n: number): Map<number, number> {
+export function addToPriceChangeMap(original: number, n: number, map: Map<number ,number>): Map<number, number> {
     let secret = BigInt(original);
     let price = getPrice(secret);
     let changes: [number, number, number, number] = [0, 0, 0, 0];
@@ -18,7 +18,8 @@ export function genPriceChangeMapFrom(original: number, n: number): Map<number, 
         price = newPrice;
         n--;
     }
-    let map = new Map<number, number>([[getChangesUID(changes), price]]);
+    const addedUIDs = new Set<number>();
+    addToMap(getChangesUID(changes), price);
     for (let i = 0; i < n; i++) {
         let newSecret = genNextSecret(secret);
         let newPrice = getPrice(newSecret);
@@ -26,11 +27,17 @@ export function genPriceChangeMapFrom(original: number, n: number): Map<number, 
         changes.push(newPrice - price);
         secret = newSecret;
         price = newPrice;
-        let changeUID = getChangesUID(changes);
-        if (!map.has(changeUID))
-            map.set(changeUID, price);
+        addToMap(getChangesUID(changes), price);
     }
     return map;
+
+    function addToMap(key: number, value: number) {
+        if (addedUIDs.has(key))
+            return;
+        let curr = map.get(key) ?? 0;
+        map.set(key, curr + value);
+        addedUIDs.add(key);
+    }
 }
 
 function getPrice(secret: bigint): number {
