@@ -1,5 +1,5 @@
 import { mapInput } from "../inputs/getInput";
-import { addToPriceChangeMap, genSecretFrom, getChangesUID } from "./secrets";
+import { addToPriceChangeMap, genSecretFrom } from "./secrets";
 
 var example = false;
 

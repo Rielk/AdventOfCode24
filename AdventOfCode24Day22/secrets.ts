@@ -1,5 +1,3 @@
-import { CantorNegtivePairing, CantorPairing } from "../general/CantorPairing";
-
 export function genSecretFrom(original: number, n: number): number {
     let secret = BigInt(original);
     for (let i = 0; i < n; i++)
@@ -7,35 +5,33 @@ export function genSecretFrom(original: number, n: number): number {
     return Number(secret);
 }
 
-export function addToPriceChangeMap(original: number, n: number, map: Map<number ,number>): Map<number, number> {
+export function addToPriceChangeMap(original: number, n: number, map: Map<number, number>): Map<number, number> {
     let secret = BigInt(original);
     let price = getPrice(secret);
-    let changes: [number, number, number, number] = [0, 0, 0, 0];
+    let changes = 0;
     for (let i = 0; i < 4; i++) {
-        secret = genNextSecret(secret);
-        let newPrice = getPrice(secret);
-        changes[i] = newPrice - price;
-        price = newPrice;
+        updateChangesAndPrice();
         n--;
     }
     const addedUIDs = new Set<number>();
-    addToMap(getChangesUID(changes), price);
+    addToMap(changes, price);
     for (let i = 0; i < n; i++) {
-        let newSecret = genNextSecret(secret);
-        let newPrice = getPrice(newSecret);
-        changes.shift();
-        changes.push(newPrice - price);
-        secret = newSecret;
-        price = newPrice;
-        addToMap(getChangesUID(changes), price);
+        updateChangesAndPrice()
+        addToMap(changes, price);
     }
     return map;
+
+    function updateChangesAndPrice() {
+        secret = genNextSecret(secret);
+        let newPrice = getPrice(secret);
+        changes = (changes << 8) + (newPrice - price);
+        price = newPrice;
+    }
 
     function addToMap(key: number, value: number) {
         if (addedUIDs.has(key))
             return;
-        let curr = map.get(key) ?? 0;
-        map.set(key, curr + value);
+        map.set(key, (map.get(key) ?? 0) + value);
         addedUIDs.add(key);
     }
 }
@@ -44,16 +40,10 @@ function getPrice(secret: bigint): number {
     return Number(secret % 10n);
 }
 
-export function getChangesUID(changes: [number, number, number, number]): number {
-    return CantorPairing(
-        CantorNegtivePairing(changes[0], changes[1]),
-        CantorNegtivePairing(changes[2], changes[3]));
-}
-
 function genNextSecret(secret: bigint): bigint {
-    secret = mixAndPrune(secret * 64n, secret);
-    secret = mixAndPrune(secret / 32n, secret);
-    secret = mixAndPrune(secret * 2048n, secret);
+    secret = mixAndPrune(secret << 6n, secret);
+    secret = mixAndPrune(secret >> 5n, secret);
+    secret = mixAndPrune(secret << 11n, secret);
     return secret;
 }
 
