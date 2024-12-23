@@ -1,3 +1,4 @@
+import { BronKerbosch } from "../general/BronKerbosch";
 import { processInput } from "../inputs/getInput";
 
 var example = false;
@@ -31,25 +32,8 @@ function find3Networks() {
 }
 
 function findLargestNetwork(): Set<string> {
-    let maximalSets = BronKerbosch1(new Set(), new Set(connections.keys()), new Set());
+    let maximalSets = BronKerbosch(connections.keys(), v => connections.get(v) ?? new Set());
     return maximalSets.reduce((max, set) => set.size > max.size ? set : max, new Set());
-
-    function BronKerbosch1(R: Set<string>, P: Set<string>, X: Set<string>, maximalSets: Set<string>[] = []): Set<string>[] {
-        if (P.size <= 0 && X.size <= 0) {
-            maximalSets.push(R);
-            return maximalSets;
-        }
-        for (let v of P) {
-            BronKerbosch1(R.union(new Set([v])), P.intersection(N(v)), X.intersection(N(v)), maximalSets)
-            P.delete(v);
-            X.add(v);
-        }
-        return maximalSets;
-    }
-
-    function N(v: string): Set<string> {
-        return connections.get(v) ?? new Set();
-    }
 }
 
 let newtorks = find3Networks();
@@ -57,5 +41,8 @@ let networksWithT = newtorks.filter(n => n[1][0] == 't' || n[2][0] == 't' || n[3
 
 let largestNetwork = [...findLargestNetwork()];
 
-console.log(networksWithT.length);
-console.log(largestNetwork.sort((a, b) => a > b ? 1 : -1).join(','));
+let numberOf3NetworksWithT = networksWithT.length;
+let largestNetworkPassword = largestNetwork.sort((a, b) => a > b ? 1 : -1).join(',');
+
+console.log(`Networks containing a computer starting with t: ${numberOf3NetworksWithT}`);
+console.log(`LAN Party Password: ${largestNetworkPassword}`);
