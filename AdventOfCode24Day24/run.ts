@@ -5,10 +5,12 @@ import { Wire } from "./wire";
 var example = false;
 
 var wires = new Map<string, Wire>(), gates: Array<IGate> = [];
+var outputWires: Wire[] = [];
 process2SectionInput(
     line => {
         let [name, value] = line.split(': ');
-        wires.set(name, new Wire(name, value));
+        let wire = new Wire(name, value);
+        wires.set(name, wire);
     },
     line => {
         let split = line.split(' ');
@@ -30,17 +32,21 @@ process2SectionInput(
             let ret = wires.get(name);
             if (ret == undefined)
                 wires.set(name, ret = new Wire(name));
+            if (name.startsWith('z'))
+                outputWires[parseInt(name.match(/\d+/)?.[0] ?? '-1')] = ret;
             return ret;
         }
     },
     24, example);
 
-let zWireOutput = wires.entries().reduce((total, [name, wire]) => {
-    if (wire.value && name.startsWith('z')) {
-        let shift = BigInt(parseInt(name.match(/\d+/)?.[0] ?? '-1'));
-        total += Number(1n << shift);
-    }
-    return total;
-}, 0);
+function calcOutput(): number {
+    return outputWires.reduce((total, wire, i) => {
+        if (wire.value)
+            total += Number(1n << BigInt(i));
+        return total;
+    }, 0);
+}
+
+let zWireOutput = calcOutput();
 
 console.log(zWireOutput);

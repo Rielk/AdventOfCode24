@@ -12,12 +12,12 @@ abstract class BaseGate implements IGate {
         this.input1 = input1;
         this.input2 = input2;
         this.output = output;
-        if (!this.updateOutput()) {
-            this.input1.waitForUpdate(() => this.updateOutput());
-            this.input2.waitForUpdate(() => this.updateOutput());
-        }
+        this.input1.onUpdate(() => this.updateOutput());
+        this.input2.onUpdate(() => this.updateOutput());
+        this.updateOutput()
     }
-    updateOutput(): boolean {
+
+    private updateOutput(): boolean {
         let i1 = this.input1.value, i2 = this.input2.value
         if (i1 == undefined || i2 == undefined)
             return false;

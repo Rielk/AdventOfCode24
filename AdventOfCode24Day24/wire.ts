@@ -17,15 +17,11 @@ export class Wire {
     }
 
     set(value: boolean): void {
-        if (this.value != undefined)
-            throw Error('Value cannot change once set');
         this.value = value;
-        let callback;
-        while (callback = this.waitingForUpdate.shift())
-            callback();
+        this.waitingForUpdate.forEach(callback => callback());
     }
 
-    waitForUpdate(callback: () => void): void {
+    onUpdate(callback: () => void): void {
         if (this.value != undefined)
             return;
         this.waitingForUpdate.push(callback);
