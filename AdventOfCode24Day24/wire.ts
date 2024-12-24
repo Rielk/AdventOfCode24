@@ -22,8 +22,6 @@ export class Wire {
     }
 
     onUpdate(callback: () => void): void {
-        if (this.value != undefined)
-            return;
         this.waitingForUpdate.push(callback);
     }
 }
