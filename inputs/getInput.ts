@@ -47,24 +47,41 @@ export function getInputInLineBatches(batchLength: number, day: number, example:
     return ret;
 }
 
-export function processInput(callbackfn: (value: string, index: number, array: string[]) => void, day: number, example: boolean, thisArg?: any): void {
+export function processInput(
+    callbackfn: (value: string, index: number, array: string[]) => void,
+    day: number, example: boolean, thisArg?: any): void {
     var data = getInputLineByLine(day, example);
     data.forEach(callbackfn, thisArg);
 }
 
-export function mapInput<T>(callbackfn: (value: string, index: number, array: string[]) => T, day: number, example: boolean, thisArg?: any): Array<T> {
+export function mapInput<T>(
+    callbackfn: (value: string, index: number, array: string[]) => T,
+    day: number, example: boolean, thisArg?: any): Array<T> {
     var data = getInputLineByLine(day, example);
     return data.map(callbackfn, thisArg);
 }
 
-export function mapInputLineBatches<T>(callbackfn: (batch: string[], index: number, array: string[][]) => T, batchLength: number, day: number, example: boolean, thisArg?: any): Array<T> {
+export function mapInputLineBatches<T>(
+    callbackfn: (batch: string[], index: number, array: string[][]) => T,
+    batchLength: number, day: number, example: boolean, thisArg?: any): Array<T> {
     var data = getInputInLineBatches(batchLength, day, example);
     return data.map(callbackfn, thisArg);
 }
 
-export function mapArray2DInput<T>(callbackfn: (value: string, index: Vector2, array: string[][]) => T, splitChar: string, day: number, example: boolean): Array2D<T> {
+export function mapArray2DInput<T>(
+    callbackfn: (value: string, index: Vector2, array: string[][]) => T,
+    splitChar: string, day: number, example: boolean): Array2D<T> {
     var data = mapInput(line => line.split(splitChar), day, example);
     return new Array2D(data.length, data[0].length, (x, y) => callbackfn(data[y][x], new Vector2(x, y), data));
+}
+
+export function process2SectionInput<T1, T2>(
+    callbackfn1: ((value: string, index: number, array: string[]) => T1),
+    callbackfn2: (value: string, index: number, array: string[]) => T2,
+    day: number, example: boolean, thisArg?: any) {
+    var { section1, section2 } = get2SectionInputByLine(day, example);
+    section1.forEach(callbackfn1, thisArg);
+    section2.forEach(callbackfn2, thisArg)
 }
 
 export function map2SectionInput<TM1, TE1, TM2, TE2>(
