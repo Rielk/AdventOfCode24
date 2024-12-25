@@ -54,6 +54,13 @@ export function processInput(
     data.forEach(callbackfn, thisArg);
 }
 
+export function processInputLineBatches<T>(
+    callbackfn: (batch: string[], index: number, array: string[][]) => void,
+    batchLength: number, day: number, example: boolean, thisArg?: any): void {
+    var data = getInputInLineBatches(batchLength, day, example);
+    data.forEach(callbackfn, thisArg);
+}
+
 export function mapInput<T>(
     callbackfn: (value: string, index: number, array: string[]) => T,
     day: number, example: boolean, thisArg?: any): Array<T> {
